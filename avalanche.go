@@ -46,12 +46,10 @@ func implode(input []int) []uint8 {
 	return result
 }
 
-func xor(x [16]uint8, y [16]uint8) [16]uint8 {
-	var result [16]uint8
-	for i, v := range x {
-		result[i] = v ^ y[i]
+func xor(x *[16]uint8, y *[16]uint8) {
+	for i, v := range y {
+		x[i] ^= v
 	}
-	return result
 }
 
 func accum(x []int, y []int) {
@@ -100,10 +98,10 @@ func main() {
 			sampleBits[i] = 1 - sampleBits[i]
 			bs := implode(sampleBits)
 			h := hashaoc17.HashAoC17(bs)
-			x := xor(h0, h)
-			xx := explode(x[:])
-			accum(bit_flips[:], xx)
-			nflipped += sum(xx)
+			xor(&h, &h0)
+			hx := explode(h[:])
+			accum(bit_flips[:], hx)
+			nflipped += sum(hx)
 			sampleBits[i] = 1 - sampleBits[i]
 		}
 	}
