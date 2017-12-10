@@ -89,23 +89,28 @@ func main() {
 	} else {
 		rand.Seed(time.Now().UnixNano())
 	}
-	sample := randSample()
-	h0 := hashaoc17.HashAoC17(sample)
+	nrounds := 128
 	nflipped := 0
 	var bit_flips [128]int
-	sampleBits := explode(sample)
-	for i := range sampleBits {
-		sampleBits[i] = 1 - sampleBits[i]
-		bs := implode(sampleBits)
-		h := hashaoc17.HashAoC17(bs)
-		x := xor(h0, h)
-		xx := explode(x[:])
-		accum(bit_flips[:], xx)
-		nflipped += sum(xx)
-		sampleBits[i] = 1 - sampleBits[i]
+	for r := 0; r < nrounds; r++ {
+		sample := randSample()
+		h0 := hashaoc17.HashAoC17(sample)
+		sampleBits := explode(sample)
+		for i := range sampleBits {
+			sampleBits[i] = 1 - sampleBits[i]
+			bs := implode(sampleBits)
+			h := hashaoc17.HashAoC17(bs)
+			x := xor(h0, h)
+			xx := explode(x[:])
+			accum(bit_flips[:], xx)
+			nflipped += sum(xx)
+			sampleBits[i] = 1 - sampleBits[i]
+		}
 	}
-	fmt.Printf("aflip: %.03f\n", float64(nflipped) / 256.0)
+	fmt.Printf("aflip: %.03f\n",
+		float64(nflipped) / 256.0 / float64(nrounds))
 	for i, v := range bit_flips {
-		fmt.Printf("bit %03d: %.03f\n", i, float64(v) / 128.0)
+		fmt.Printf("bit %03d: %.03f\n",
+			i, float64(v) / 128.0 / float64(nrounds))
 	}
 }
