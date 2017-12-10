@@ -108,7 +108,7 @@ func main() {
 		}
 	}
 	fmt.Printf("aflip: %.03f\n",
-		float64(nflipped) / 256.0 / float64(nrounds))
+		float64(nflipped) / 128.0 / float64(nrounds))
 	for i, v := range bit_flips {
 		fmt.Printf("bit %03d: %.03f\n",
 			i, float64(v) / 128.0 / float64(nrounds))
